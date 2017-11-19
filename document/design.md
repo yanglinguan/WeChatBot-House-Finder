@@ -4,7 +4,7 @@
 *  Data Flow
   1.  Once `Client Request Service` gets a request from a client, it first checks if database has matched house listing. If there is a listing found, then it sends notification to the client.
   1.  Then store the request into `Redis`.
-  1.  For every 10 minus, the `Scraper` loops over the requst in Redis, and scrape available house listings from `Craigslist`.
+  1.  For every 10 minutes, the `Scraper` loops over the requst in Redis, and scrape available house listings from `Craigslist`.
   1.  Once a listing scraped by `Scraper`, it checks if the listing's id is in Redis. If the listing's id does not exist, store the listing's id into Redis, and send the listing to `Filter Task Queue`.
   1.  `House Listing Filter` fetches house listings which includes the client's id from `Filter Task Queue`. Based on the client's id, `House Listing Filter` acquires the client request from Redis. Then, send the house listing which matches the request into `Dedup Task Queue`
   1.  `House Listing Dedupper` fetchs the listings from `Dedup Task Queue`, and performs dedupping base on image id in the listings. Then, store the listings into `MongoDB`
@@ -34,7 +34,7 @@ The diagram of the data flow is shown below.
     * Fetch a `House Listing` from `Dedup Task Queue`.
     * Use [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) to extract the urls of the image in the house listing's detail page.
     * Compute the hash of the image urls.
-    * Filter out the House Listings whose `image_url_hash` have already existed in database. 
+    * Filter out the House Listings whose `image_url_hash` have already existed in database.
 
 Table 1: Client Request
 
