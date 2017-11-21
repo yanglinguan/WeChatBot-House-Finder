@@ -6,8 +6,8 @@
   1.  Then store the request into `Redis`.
   1.  For every 10 minutes, the `Scraper` loops over the requst in Redis, and scrape available house listings from `Craigslist`.
   1.  Once a listing scraped by `Scraper`, it checks if the listing's id is in Redis. If the listing's id does not exist, store the listing's id into Redis, and send the listing to `Filter Task Queue`.
-  1.  `House Listing Filter` fetches house listings which includes the client's id from `Filter Task Queue`. Based on the client's id, `House Listing Filter` acquires the client request from Redis. Then, send the house listing which matches the request into `Dedup Task Queue`
-  1.  `House Listing Dedupper` fetchs the listings from `Dedup Task Queue`, and performs dedupping base on image id in the listings. Then, store the listings into `MongoDB`
+  1.  `House Listing Filter` fetches house listings which includes the client's id from `Filter Task Queue`. Based on the client's id, `House Listing Filter` acquires the client request from Redis. Then, send the house listing which matches the request into `Dedup Task Queue`.
+  1.  `House Listing Dedupper` fetchs the listings from `Dedup Task Queue`, and performs dedupping base on image id in the listings. Then, store the listings into `MongoDB` and push them into `Notification Task Q    ueue` so that notification service can fetch the new house listings and sends clients notifications.
 
 The diagram of the data flow is shown below.
 
@@ -35,6 +35,7 @@ The diagram of the data flow is shown below.
     * Use [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) to extract the urls of the image in the house listing's detail page.
     * Compute the hash of the image urls.
     * Filter out the House Listings whose `image_url_hash` have already existed in database.
+    * Store the House Listings into database and push them into notification queue as well
 
 Table 1: Client Request
 
@@ -42,13 +43,18 @@ Table 1: Client Request
 |--- | ---|
 |areas|list of strings, interested areas|
 |city|string, interested city|
+|departure_to_work|int, departure time of going to work|
 |id|string, client id|
 |max_bedroom|int, maximum number of bedrooms|
 |max_time_to_work|long, maximum time from work to place by transit|
 |max_price|int, maximum price|
 |min_bedroom|int, minimum number of bedrooms|
 |min_price|int, minimum price|
-|work_place_postal_code|string, the postol code of your work place|
+|time_to_work|int, duration of time from house to work (seconds)|
+|time_to_work_delta|int, range of time_to_work, time_to_work +/- time_to_work_delta (seconds)|
+|travel_mode|string, transit mode, e.g: driving, walking, transit|
+|work_addr|string, the address or postal code of your work place|
+
 
 Table 2: House Listing
 
@@ -56,7 +62,8 @@ Field | Discriptions
 --- | ---
 area|string, area
 client_id|string, client id
-geotag|string, geographic code
+lat|float, geographic code
+lon|float, geographic code
 image_url_hash|string, hash value of image urls
 listing_id|string, listing id
 location|string, location
