@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
-from flask import Flask, request, abort, render_template
+from flask import Flask, request, abort, render_template, redirect, url_for
 from wechatpy import parse_message, create_reply
 from wechatpy.utils import check_signature
 from wechatpy.exceptions import (
@@ -10,58 +10,37 @@ from wechatpy.exceptions import (
         InvalidAppIdException,
 )
 
-TOKEN = "hello"
-AES_KEY = "ptaQh6sPZbiqEm8zVTGoXiiLFg7B1w6Y9rKjzYn2QV2"
-APPID = "wx866a95bc4757076b"
+import utils
+
+from config import config
+
+TOKEN = config['TOKEN']
+AES_KEY = config['AESKEY']
+APPID = config['APPID']
 
 
 app = Flask(__name__)
 
-@app.route('/wechat', methods=['GET', 'POST'])
-def wechat():
-    signature = request.args.get('signature', '')
-    timestamp = request.args.get('timestamp', '')
-    nonce = request.args.get('nonce', '')
-    encrypt_type = request.args.get('encrypt_type', 'raw')
-    msg_signature = request.args.get('msg_signature', '')
-    try:
-        check_signature(TOKEN, signature, timestamp, nonce)
-    except InvalidSignatureException:
-        abort(403)
+@app.route('/wechat', methods=['GET'])
+def wechat_get():
+    utils.check_signature(request)
+    echo_str = request.args.get('echostr', '')
+    return echo_str
 
-    if request.method == 'GET':
-        echo_str = request.args.get('echostr', '')
-        return echo_str
+@app.route('/wechat', methods=['POST'])
+def wechat_post():
+    utils.check_signature(request)
 
-    # POST request
-    if encrypt_type == 'raw':
-        msg = parse_message(request.data)
-        if msg.type == 'text':
-            reply = create_reply(msg.content, msg)
-        else:
-            reply = create_reply('Sorry, cannot handle this for now', msg)
-        return reply.render()
-    else:
-        from wechatpy.crypto import WeChatCrypto
+    msg = parse_message(request.data)
+    if msg.type == 'event':
+        return utils.event_handler(msg)
 
-        crypto = WeChatCrypto(TOKEN, AES_KEY, APPID)
-        try:
-            msg = crypto.decrypt_message(
-                    request.data,
-                    msg_signature,
-                    timestamp,
-                    nonce
-            )
-        except (InvalidSignatureException, InvalidAppIdException):
-            abort(403)
-        else:
-            msg = parse_message(msg)
-            if msg.type == 'text':
-                reply = create_reply(msg.content, msg)
-            else:
-                reply = create_reply('Sorry, cannot handle this for now', msg)
+    if msg.type == 'text':
+        return utils.text_handler(msg)
 
-            return crypto.encrypt_message(reply.render(), nonce, timestamp)
+    reply = create_reply('Sorry, cannot handle this for now', msg)
+
+    return reply.render()
 
 if __name__ == '__main__':
     app.run('127.0.0.1', 5001, debug=True)
