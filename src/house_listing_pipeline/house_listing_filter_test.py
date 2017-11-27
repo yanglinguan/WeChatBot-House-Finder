@@ -5,7 +5,7 @@ import pickle
 def test_handle_message():
     redis_client.rpush("client_list", "1")
 
-    msg = {"client_id": "1"}
+    msg = {"client_id": "1", "request_id": "1"}
 
     geocode = gmaps.geocode("N2T0A5")
 
@@ -22,7 +22,9 @@ def test_handle_message():
             "time_to_work": 25 * 60,
             "time_to_work_delta": 5 * 60,
             }
-    redis_client.set("1", pickle.dumps(client_request))
+
+    client_request_table = {"1": client_request}
+    redis_client.set("1", pickle.dumps(client_request_table))
 
     task = handle_message(msg)
 

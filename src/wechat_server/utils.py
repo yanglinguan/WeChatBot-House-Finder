@@ -6,6 +6,10 @@ from wechatpy.exceptions import (
         InvalidAppIdException,
 )
 
+TOKEN = config['TOKEN']
+AES_KEY = config['AESKEY']
+APPID = config['APPID']
+
 def check_signature(request):
     signature = request.args.get('signature', '')
     timestamp = request.args.get('timestamp', '')
@@ -17,13 +21,11 @@ def check_signature(request):
     except InvalidSignatureException:
         abort(403)
 
-
-
 def event_handler(msg):
     if msg.event == 'subscribe':
         reply = create_reply('Welcome to CozyPlaces, Click http://www.google.com to submit your request', msg)
         return reply.render()
-
+    return ''
     
 def text_handler(msg):
     reply = create_reply(msg.content, msg)

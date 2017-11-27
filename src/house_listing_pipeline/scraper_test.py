@@ -1,4 +1,4 @@
-from scraper import scrape, do_scrape, redis_client
+from scraper import scrape, do_scrape, redis_client, cloudAMQP_client
 
 import pickle
 
@@ -31,10 +31,16 @@ def test_do_scrape():
             "min_bedrooms": 1,
             "max_bedrooms": 1,
             "private_bath": True,
+            "request_id": "1",
+            "active": True,
             }
-    redis_client.set("1", pickle.dumps(client_request))
+
+    client_request_table = {"1": client_request}
+    redis_client.set("1", pickle.dumps(client_request_table))
 
     do_scrape()
+
+    cloudAMQP_client.getMessage()
 
 
 

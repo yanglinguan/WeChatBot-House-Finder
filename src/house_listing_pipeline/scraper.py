@@ -26,7 +26,7 @@ redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT)
 cloudAMQP_client = CloudAMQPClient(FILTER_TASK_QUEUE_URL, FILTER_TASK_QUEUE_NAME)
 
 
-def scrape(city, area, category, filters, clientId):
+def scrape(city, area, category, filters, clientId, requestId):
     print "city: " + city
     print "area: " + area
     print "category: " + category
@@ -78,7 +78,8 @@ def scrape(city, area, category, filters, clientId):
                     "price": price,
                     "location": result["where"],
                     "area": result["area"],
-                    "client_id": clientId
+                    "client_id": clientId,
+                    "request_id": requestId,
                     }
             num_of_new_listings = num_of_new_listings + 1
             results.append(house_listing)
@@ -91,28 +92,32 @@ def do_scrape():
     client_list = redis_client.lrange("client_list", 0, -1)
 
     for client_id in client_list:
-        client_request = pickle.loads(redis_client.get(client_id))
+        client_request_table = pickle.loads(redis_client.get(client_id))
 
-        city = client_request["city"]
-        area_list = client_request["area"]
-        category_list = client_request["category"]
-        filters = {
-                "min_bedrooms": client_request["min_bedrooms"],
-                "max_bedrooms": client_request["max_bedrooms"],
-                "min_price": client_request["min_price"],
-                "max_price": client_request["max_price"],
-                "private_bath": client_request["private_bath"]
-                }
+        for request_id in client_request_table:
+            client_request = client_request_table[request_id]
+            if not client_request["active"]:
+                continue
+            city = client_request["city"]
+            area_list = client_request["area"]
+            category_list = client_request["category"]
+            filters = {
+                    "min_bedrooms": client_request["min_bedrooms"],
+                    "max_bedrooms": client_request["max_bedrooms"],
+                    "min_price": client_request["min_price"],
+                    "max_price": client_request["max_price"],
+                    "private_bath": client_request["private_bath"]
+                    }
 
         
-        all_results = []
-        for area in area_list:
-            for category in category_list:
-                all_results += scrape(city, area, category, filters, client_id)
+            all_results = []
+            for area in area_list:
+                for category in category_list:
+                    all_results += scrape(city, area, category, filters, client_id, request_id)
 
-        print("{}: Got {} results for client {}".format(time.ctime(), len(all_results), client_id))
+            print("{}: Got {} results for client {}".format(time.ctime(), len(all_results), client_id))
 
-        cloudAMQP_client.sleep(SLEEP_TIME_IN_SECONDS)
+            cloudAMQP_client.sleep(SLEEP_TIME_IN_SECONDS)
 
 
 

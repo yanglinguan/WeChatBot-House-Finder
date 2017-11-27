@@ -61,7 +61,8 @@ def handle_message(msg):
         return
 
     task = msg
-    client_request = pickle.loads(redis_client.get(msg["client_id"]))
+    client_request_table = pickle.loads(redis_client.get(msg["client_id"]))
+    client_request = client_request_table[msg["request_id"]]
 
     work_addr = client_request["work_addr"]
 
