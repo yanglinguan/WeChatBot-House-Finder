@@ -38,7 +38,6 @@ router.delete('/userId/:userId/requestId/:requestId', function(req, res, next) {
 });
 
 function validateRequestForm(payload) {
-  console.log(payload);
   const errors = {};
   let isFormValid = true;
   let message = '';

@@ -1,5 +1,6 @@
 import Auth from '../Auth/Auth';
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import './Base.css';
 
@@ -10,7 +11,7 @@ const Base = ({ children }) => (
         <a href="/" className="brand-logo">House Finder</a>
         <ul id="nav-mobile" className="right">
           <div>
-            <li><Link to="/history"> History </Link></li>
+            <li><Link to="/reqeustForm/userId/:userId">History</Link></li>
           </div>
         </ul>
       </div>

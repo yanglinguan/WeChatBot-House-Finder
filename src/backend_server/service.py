@@ -7,7 +7,6 @@ SERVER_PORT = 4040
 class RequestHandler(pyjsonrpc.HttpRequestHandler):
     @pyjsonrpc.rpcmethod
     def submitRequestForm(self, request_form):
-        print request_form
         return operations.submitRequestForm(request_form)
     
     @pyjsonrpc.rpcmethod

@@ -1,26 +1,30 @@
-import './RequestFormPage.css'
-import React, {PropTypes} from 'react'
+import './RequestFormPage.css';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import RequestForm from './RequestForm';
 
 class RequestFormPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      error: {},
+      errors: {},
       message: '',
       user_id: context.router.params.userId,
       request_form: {
-        areas: [],
+        areas: '',
         city: '',
-        departure_to_work: 0,
+        departure_to_work_hour: 0,
+        departure_to_work_minute: 0,
         max_bedroom: 0,
         min_bedroom: 0,
         max_price: 0,
         min_price: 0,
-        private_bath: false,
-        time_to_work: 0,
-        time_to_work_delta: 0,
-        travel_mode: '',
+        private_bath: true,
+        time_to_work_hour: 0,
+        time_to_work_minute: 0,
+        delta_minute: 0,
+        travel_mode: 'transit',
         work_addr: ''
       }
     };
@@ -34,31 +38,42 @@ class RequestFormPage extends React.Component {
     
     const user_id = this.state.user_id;
 
-    let url = 'http://localhost:3000/requestForm/userId/' + this.state.user_id;
+    let url = 'http://localhost:3001/requestForm/userId/' + this.state.user_id;
 
-    let request = new Request(encodeURI(url), {
-      method: 'POST',
-      header: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        areas:this.state.request_form.areas,
+    const request_form = this.state.request_form
+    const areaArray = request_form.areas.split(",");
+    let areaList = []
+    for(var a in areaArray){
+      areaList.push(a.replace(/ /g, ''));
+    }
+    
+    const form = JSON.stringify({
+        areas:areaList,
         city: this.state.request_form.city,
-        departure_to_work: this.state.request_form.departue_to_work,
+        departure_to_work_hour: this.state.request_form.departure_to_work_hour,
+        departure_to_work_minute: this.state.request_form.departure_to_work_minute,
         max_bedroom: this.state.request_form.max_bedroom,
         min_bedroom: this.state.request_form.min_bedroom,
         max_price: this.state.request_form.max_price,
         min_price: this.state.request_form.min_price,
-        time_to_work: this.state.request_form.time_to_work,
+        time_to_work: this.state.request_form.time_to_work_hour * 60 * 60 + this.state.request_form.time_to_work_minute * 60,
         time_to_work_delta: this.state.request_form.time_to_work_delta,
         travel_mode: this.state.request_form.travel_mode,
-        work_addr: this.state.request_form.work_addr
-      }),
-      cache: false
-    });
+        work_addr: this.state.request_form.work_addr,
+        private_bath: this.state.request_form.private_bath
+      });
 
-    fetch(request)
+    console.log(form);
+
+    fetch(url, {
+      method: "POST",
+      body: form,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      cache: false
+    })
       .then((res) => res.json())
       .then((result) => {
         if (!result.success) {
@@ -76,23 +91,45 @@ class RequestFormPage extends React.Component {
   changeUser(event) {
     const field = event.target.name;
     const request_form = this.state.request_form;
-    console.log(event.target.value);
-    if (field === 'max_bedroom' || 
-        field === 'min_bedroom' || 
-        field === 'max_price' || 
-        field === 'min_price' ) {
+    const errors = this.state.errors
+    //console.log(field)
+    //console.log(event.target.value);
+    const value = event.target.value;
 
-      request_form[field] = parseInt(event.target.value);
-      if (isNaN(request_form[field])) {
-        const errors = this.state.errors;
-        errors[field] = field + ": provide integer number for this field";
-        this.setState({errors});
-      } else {
-        const errors = this.state.errors;
-        errors.password = '';
-        this.setState({errors});
-      } 
+    if(!event.target.validity.valid) {
+      errors[field] = event.target.validationMessage;
+      this.setState({errors});
+      return;
     }
+
+   // if(field === "areas") {
+     // const areaArray = value.split(",");
+    //  for(var a in areaArray){
+    //    request_form[field].push(a.replace(/ /g, ''));
+    //  }
+   //   this.setState({request_form})
+   //   return
+  //  }
+
+    if(field === "private_bath") {
+      if(value === "true") {
+        request_form[field] = true;
+      } else {
+        request_form[field] = false;
+      }
+
+      this.setState({request_form});
+      return;
+    }
+
+    if(field === "delta_minute"){
+      const sec = value * 60;
+      request_form[field] = sec;
+      this.setState({request_form});
+      return;
+    }
+
+   
     request_form[field] = event.target.value;
 
     this.setState({request_form});

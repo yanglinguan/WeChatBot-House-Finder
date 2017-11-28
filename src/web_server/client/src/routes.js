@@ -7,6 +7,10 @@ const routes = {
   component: Base,
   childRoutes: [
     {
+      path: '/',
+      component: App
+    },
+    {
       path: '/requestForm/userId/:userId', 
       component: RequestFormPage
     },
