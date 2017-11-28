@@ -12,7 +12,7 @@ class Auth {
   }
 
   static getUserId() {
-    return localStorage.getItem（'user_id');
+    return localStorage.getItem('user_id');
   }
 }
 

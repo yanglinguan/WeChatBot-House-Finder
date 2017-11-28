@@ -1,5 +1,5 @@
 import './RequestFormPage.css'
-import React from 'react'
+import React, {PropTypes} from 'react'
 import RequestForm from './RequestForm';
 
 class RequestFormPage extends React.Component {
@@ -17,6 +17,7 @@ class RequestFormPage extends React.Component {
         min_bedroom: 0,
         max_price: 0,
         min_price: 0,
+        private_bath: false,
         time_to_work: 0,
         time_to_work_delta: 0,
         travel_mode: '',
@@ -53,7 +54,7 @@ class RequestFormPage extends React.Component {
         time_to_work_delta: this.state.request_form.time_to_work_delta,
         travel_mode: this.state.request_form.travel_mode,
         work_addr: this.state.request_form.work_addr
-      })
+      }),
       cache: false
     });
 
@@ -75,6 +76,7 @@ class RequestFormPage extends React.Component {
   changeUser(event) {
     const field = event.target.name;
     const request_form = this.state.request_form;
+    console.log(event.target.value);
     if (field === 'max_bedroom' || 
         field === 'min_bedroom' || 
         field === 'max_price' || 
@@ -91,6 +93,9 @@ class RequestFormPage extends React.Component {
         this.setState({errors});
       } 
     }
+    request_form[field] = event.target.value;
+
+    this.setState({request_form});
   }
 
   render() {
