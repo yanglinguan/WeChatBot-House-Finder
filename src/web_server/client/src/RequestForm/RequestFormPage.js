@@ -1,3 +1,4 @@
+import Auth from '../Auth/Auth'
 import './RequestFormPage.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -33,6 +34,12 @@ class RequestFormPage extends React.Component {
     this.changeUser = this.changeUser.bind(this);
   }
 
+  componentDidMount() {
+    console.log("log");
+    console.log(this.state.user_id);
+    Auth.authenticateUser(this.state.user_id);
+  }
+
   processForm(event) {
     event.preventDefault();
     
@@ -44,7 +51,7 @@ class RequestFormPage extends React.Component {
     const areaArray = request_form.areas.split(",");
     let areaList = []
     for(var a in areaArray){
-      areaList.push(a.replace(/ /g, ''));
+      areaList.push(areaArray[a]);
     }
     
     const form = JSON.stringify({
@@ -57,7 +64,7 @@ class RequestFormPage extends React.Component {
         max_price: this.state.request_form.max_price,
         min_price: this.state.request_form.min_price,
         time_to_work: this.state.request_form.time_to_work_hour * 60 * 60 + this.state.request_form.time_to_work_minute * 60,
-        time_to_work_delta: this.state.request_form.time_to_work_delta,
+        time_to_work_delta: this.state.request_form.delta_minute,
         travel_mode: this.state.request_form.travel_mode,
         work_addr: this.state.request_form.work_addr,
         private_bath: this.state.request_form.private_bath

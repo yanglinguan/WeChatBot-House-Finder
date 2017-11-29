@@ -7,7 +7,7 @@ import sys
 
 if __name__ == "__main__":
     
-    SLEEP_TIME_BETWEEN_LOOP_IN_SECONDS = 60 * 10
+    SLEEP_TIME_BETWEEN_LOOP_IN_SECONDS = 10
     
     while True:
         print("{}: Starting scrape cycle".format(time.ctime()))

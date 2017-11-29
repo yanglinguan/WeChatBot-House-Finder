@@ -7,7 +7,7 @@ import sys
 
 if __name__ == "__main__":
 
-    SLEEP_TIME_BETWEEN_LOOP_IN_SECONDS = 60 * 10
+    SLEEP_TIME_BETWEEN_LOOP_IN_SECONDS = 10
 
     while True:
         print("{}: Starting filtering cycle".format(time.ctime()))
@@ -22,5 +22,5 @@ if __name__ == "__main__":
             traceback.print_exc()
         else:
             print("{}: Successfully finished filtering".format(time.ctime()))
-        filter_queue_client(SLEEP_TIME_BETWEEN_LOOP_IN_SECONDS)
+        filter_queue_client.sleep(SLEEP_TIME_BETWEEN_LOOP_IN_SECONDS)
 

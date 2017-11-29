@@ -21,17 +21,25 @@ APPID = config['APPID']
 
 app = Flask(__name__)
 
+def check_wrap(request):
+    try:
+        utils.check_signature(request)
+    except InvalidSignatureException:
+        abort(403)
+
 @app.route('/wechat', methods=['GET'])
 def wechat_get():
-    utils.check_signature(request)
+    check_wrap(request)
     echo_str = request.args.get('echostr', '')
     return echo_str
 
 @app.route('/wechat', methods=['POST'])
 def wechat_post():
-    utils.check_signature(request)
+    check_wrap(request)
 
     msg = parse_message(request.data)
+    print msg.source
+    print msg.target
     if msg.type == 'event':
         return utils.event_handler(msg)
 

@@ -34,7 +34,7 @@ def scrape(city, area, category, filters, clientId, requestId):
     cl_h = CraigslistHousing(site=city, area=area, category=category, filters=filters)
 
     results = []
-    gen = cl_h.get_results(sort_by='newest', geotagged=True, limit=20)
+    gen = cl_h.get_results(sort_by='newest', geotagged=True, limit=50)
 
     num_of_new_listings = 0
 
@@ -58,6 +58,8 @@ def scrape(city, area, category, filters, clientId, requestId):
             if result['geotag'] is not None:
                 lat = result["geotag"][0]
                 lon = result["geotag"][1]
+            else:
+                continue
 
             redis_client.set(result['id'], "True")
             redis_client.expire(result['id'], HOUSE_LISTING_TIME_OUT_IN_SECONDS)
@@ -99,11 +101,12 @@ def do_scrape():
             if not client_request["active"]:
                 continue
             city = client_request["city"]
-            area_list = client_request["area"]
-            category_list = client_request["category"]
+            area_list = client_request["areas"]
+            #category_list = client_request["category"]
+            category_list = ["apa"]
             filters = {
-                    "min_bedrooms": client_request["min_bedrooms"],
-                    "max_bedrooms": client_request["max_bedrooms"],
+                    "min_bedrooms": client_request["min_bedroom"],
+                    "max_bedrooms": client_request["max_bedroom"],
                     "min_price": client_request["min_price"],
                     "max_price": client_request["max_price"],
                     "private_bath": client_request["private_bath"]

@@ -66,20 +66,25 @@ def handle_message(msg):
 
     work_addr = client_request["work_addr"]
 
-    travel_mode = client_request["transit_mode"]
+    travel_mode = client_request["travel_mode"]
 
     house_addr = (msg["lat"], msg["lon"])
 
-    departure_to_work = client_request['departure_to_work']
+    departure_to_work_hour = client_request['departure_to_work_hour']
+    departure_to_work_minute = client_request['departure_to_work_minute']
+
 
     nextday = datetime.datetime.now() + datetime.timedelta(days=1)
 
-    d_time = nextday.replace(hour=departure_to_work, minute=0, second=0, microsecond=0)
+    d_time = nextday.replace(hour=int(departure_to_work_hour), minute=int(departure_to_work_minute), second=0, microsecond=0)
 
     print house_addr
     print work_addr
+    print d_time
 
     transit_total_duration, transit_total_distance, walking_duration, walking_distance = getTimeToWork(house_addr, work_addr, TRANSIT_MODE, d_time)
+
+    print transit_total_duration
     
     other_mode_duration = sys.maxint
     other_mode_distance = sys.maxint
@@ -90,12 +95,19 @@ def handle_message(msg):
     min_mode_duration = transit_total_duration
     min_mode_distance = transit_total_distance
 
+    print travel_mode
+    print other_mode_duration
+
     if min_mode_duration > other_mode_duration:
         min_mode_duration = other_mode_duration
         min_mode_distance = other_mode_distance
 
-    time_to_work = client_request['time_to_work']
-    time_delta = client_request['time_to_work_delta']
+    time_to_work = int(client_request['time_to_work'])
+    time_delta = 0
+    # time_delta = int(client_request['time_to_work_delta'])
+    print "time to wok:" + str(time_to_work)
+    print "min: " + str(min_mode_duration)
+    print min_mode_duration
 
     if min_mode_duration <= time_to_work + time_delta:
         task['transit_mode_duration'] = transit_total_duration
@@ -119,7 +131,7 @@ def filter_queue():
                     pass
             else:
                 break
-            filter_queue_client_sleep(SLEEP_TIME_IN_SECONDS)
+            filter_queue_client.sleep(SLEEP_TIME_IN_SECONDS)
         else:
             print("filter task queue is none")
             break

@@ -5,6 +5,7 @@ import os
 import re
 import requests
 import sys
+import pickle
 
 # import common package in parent directory
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
@@ -25,6 +26,22 @@ NOTIFICATION_TASK_QUEUE_NAME = "notification_task_queue"
 
 dedup_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)
 notification_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)  
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
+
+def send_to_redis(task):
+    task_id = task["client_id"] + "_new"
+    if redis_client.get(task_id) is not None:
+        new_list = pickle.loads(redis_client.get(task_id))
+        new_list[task["id"]] = task
+        redis_client.set(task_id, pickle.dumps(new_list))
+    else:
+        new_list = {}
+        new_list[task['id']] = task
+        redis_client.set(task_id, pickle.dumps(new_list))
+
 
 def handle_message(msg):
     if msg is None or not isinstance(msg, dict):
@@ -65,9 +82,11 @@ def handle_message(msg):
 
     db[HOUSE_LISTING_TABLE_NAME].replace_one({'img_id_hash': task['img_id_hash']}, task, upsert=True)
 
-    notification_queue_client.sendMessage(task)
+    send_to_redis(task)
+    
+    #notification_queue_client.sendMessage(task)
     return task
-
+    
 
 def dedup():
     while True:
