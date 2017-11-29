@@ -1,0 +1,6 @@
+redis
+beautifulsoup4
+googlemaps
+python-craigslist
+pika
+pymongo
