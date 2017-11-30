@@ -50,12 +50,12 @@ class RequestFormPage extends React.Component {
     const areaArray = request_form.areas.split(",");
     let areaList = []
     for(var a in areaArray){
-      areaList.push(areaArray[a]);
+      areaList.push(areaArray[a].toLowerCase());
     }
     
     const form = JSON.stringify({
         areas:areaList,
-        city: this.state.request_form.city,
+        city: this.state.request_form.city.toLowerCase(),
         departure_to_work_hour: this.state.request_form.departure_to_work_hour,
         departure_to_work_minute: this.state.request_form.departure_to_work_minute,
         max_bedroom: this.state.request_form.max_bedroom,
