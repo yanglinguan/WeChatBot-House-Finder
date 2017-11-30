@@ -7,6 +7,7 @@ import requests
 import sys
 import pickle
 import redis
+import lxml
 
 # import common package in parent directory
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'common'))
@@ -28,18 +29,21 @@ NOTIFICATION_TASK_QUEUE_NAME = "notification_task_queue"
 dedup_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)
 notification_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)  
 
-REDIS_HOST = 'redis'
+REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
 
 def send_to_redis(task):
     task_id = task["client_id"] + "_new"
+    print task_id
     if redis_client.get(task_id) is not None:
         new_list = pickle.loads(redis_client.get(task_id))
         new_list[task["id"]] = task
+	print "add new"
         redis_client.set(task_id, pickle.dumps(new_list))
     else:
         new_list = {}
+	print "careate new"
         new_list[task['id']] = task
         redis_client.set(task_id, pickle.dumps(new_list))
 
@@ -82,7 +86,7 @@ def handle_message(msg):
     task['img_id_hash'] = img_id_hash
 
     db[HOUSE_LISTING_TABLE_NAME].replace_one({'img_id_hash': task['img_id_hash']}, task, upsert=True)
-
+    print "********************************************* before send to redis"
     send_to_redis(task)
     
     #notification_queue_client.sendMessage(task)

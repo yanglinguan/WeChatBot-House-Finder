@@ -12,7 +12,7 @@ TOKEN = config['TOKEN']
 AES_KEY = config['AESKEY']
 APPID = config['APPID']
 
-REDIS_HOST = 'redis'
+REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
@@ -42,7 +42,7 @@ def event_handler(msg):
     return ''
     
 def text_handler(msg):
-    if msg.content == "new house":
+    if "new" in msg.content.lower():
         house_listing = getNewHouse(msg.source)
         if len(house_listing) == 0:
             reply = create_reply("no more new house", msg)
@@ -64,6 +64,7 @@ def text_handler(msg):
 
 def getNewHouse(client_id):
     search_id = client_id + "_new"
+    print search_id
     if redis_client.get(search_id) is not None:
         listing = pickle.loads(redis_client.get(search_id))
         l = []
@@ -76,12 +77,13 @@ def getNewHouse(client_id):
             count += 1;
 
         for i in l: 
-            del listing[i['id']]
-
+            listing.pop(i['id'])
+	    print i['id']
+	
         if len(listing) > 0:
             redis_client.set(search_id, pickle.dumps(listing))
         else:
-            redis_client.delete([search_id])
+            redis_client.delete(search_id)
         return l
     else:
         return []

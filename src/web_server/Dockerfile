@@ -1,4 +1,4 @@
-FROM node:6.11.0
+FROM node:9.2.0
 
 ADD . /src
 WORKDIR /src/client

@@ -16,7 +16,7 @@ SLEEP_TIME_IN_SECONDS = 10
 
 HOUSE_LISTING_TIME_OUT_IN_SECONDS = 3600 * 24 * 3
 
-REDIS_HOST = 'redis'
+REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 
 FILTER_TASK_QUEUE_URL = "amqp://ymcsvgqv:ulM5Xwupq5lJdQ3L0HBy_-xO74CRtGh7@mosquito.rmq.cloudamqp.com/ymcsvgqv"
@@ -82,6 +82,7 @@ def scrape(city, area, category, filters, clientId, requestId):
                     "area": result["area"],
                     "client_id": clientId,
                     "request_id": requestId,
+		    "id": result["id"],
                     }
             num_of_new_listings = num_of_new_listings + 1
             results.append(house_listing)
@@ -109,8 +110,9 @@ def do_scrape():
                     "max_bedrooms": client_request["max_bedroom"],
                     "min_price": client_request["min_price"],
                     "max_price": client_request["max_price"],
-                    "private_bath": client_request["private_bath"]
-                    }
+                    "private_bath": client_request["private_bath"],
+		    "has_image": True
+		    }
 
         
             all_results = []
