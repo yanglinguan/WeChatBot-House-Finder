@@ -64,3 +64,12 @@ def getRequestHistory(user_id):
         return request_table
     else:
         return {}
+
+def getRequestDetail(user_id, request_id):
+    if redis_client.get(user_id) is not None:
+        print "Get Request Detail..."
+        request_table = pickle.loads(redis_client.get(user_id))
+        
+        return request_table[request_id]
+    else:
+        return {}

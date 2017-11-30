@@ -6,9 +6,10 @@ import re
 import requests
 import sys
 import pickle
+import redis
 
 # import common package in parent directory
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'common'))
 
 import mongodb_client
 
@@ -27,7 +28,7 @@ NOTIFICATION_TASK_QUEUE_NAME = "notification_task_queue"
 dedup_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)
 notification_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)  
 
-REDIS_HOST = 'localhost'
+REDIS_HOST = 'redis'
 REDIS_PORT = 6379
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
 

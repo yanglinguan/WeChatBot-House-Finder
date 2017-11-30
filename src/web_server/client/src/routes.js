@@ -1,27 +1,32 @@
-import Base from './Base/Base'
-import App from './App/App'
+import Base from './Base/Base';
+import App from './App/App';
 //import DetailPage from './RequestDetail/DetailPage';
 import RequestFormPage from './RequestForm/RequestFormPage';
 import HistoryPage from './History/HistoryPage';
-
+import ConfirmationPage from './Confirmation/ConfirmationPage';
+import DetailPage from "./Detail/DetailPage";
 const routes = {
   component: Base,
   childRoutes: [
     {
-      path: '/',
+      path: '/home/userId/:userId',
       component: App
     },
     {
       path: '/requestForm/userId/:userId', 
       component: RequestFormPage
     },
-  //  {
-    //  path: 'requestDetail/userId/:userId/requestId/:requestId',
-    //  component: DetailPage
-  //  },
     {
       path: '/history/userId/:userId',
       component: HistoryPage
+    },
+    {
+      path: '/confirmation/userId/:userId',
+      component: ConfirmationPage
+    },
+    {
+      path: '/requestDetail/userId/:userId/requestId/:requestId',
+      component: DetailPage
     }
   ]
 };

@@ -17,6 +17,10 @@ class RequestHandler(pyjsonrpc.HttpRequestHandler):
     def deleteRequestForm(self, user_id, request_id):
         return operations.deleteRequestForm(user_id, request_id)
 
+    @pyjsonrpc.rpcmethod
+    def getRequestDetail(self, user_id, request_id):
+        return operations.getRequestDetail(user_id, request_id)
+
 HTTP_SERVER = pyjsonrpc.ThreadingHttpServer(
     server_address=(SERVER_HOST, SERVER_PORT),
     RequestHandlerClass=RequestHandler

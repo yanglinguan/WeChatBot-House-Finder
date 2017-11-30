@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import House from '../House/House';
 
+import $ from 'jquery'
+
 class HistoryPage extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -12,9 +14,19 @@ class HistoryPage extends React.Component {
   }
 
   componentDidMount() {
+    //let x = $('.collapsible');
+   // x.collapsible;
+    //    this.collapsible.collapsible();
     this.loadHistory();
+    //$(document).ready(function(){
+   // $('.collapsible').collapsible();
+   // });
+  
   }
 
+
+
+ 
   loadHistory() {
     let url = 'http://localhost:3001/history/userId/' + this.state.user_id;
 
@@ -37,20 +49,17 @@ class HistoryPage extends React.Component {
   }
 
   renderListings() {
-    const house_list = this.state.listings.map(function(listing) {
+
+    const house_list = Object.keys(this.state.listings).map((key) => {
       return (
-          <a className='list-group-item' href="#">
-            <House listing={listing} />
-          </a>
+          <House key={key} listing={this.state.listings[key]} request_id={key} user_id={this.state.user_id}/>
       );
     });
 
     return (
-        <div className='container-fluid'>
-          <div className='list-group'>
-            {house_list}
-          </div>
-        </div>
+        <ul className='collection'>
+          {house_list}
+        </ul>
     )
   }
 
@@ -58,15 +67,23 @@ class HistoryPage extends React.Component {
     
         if (this.state.listings) {
           return (
-            <div>
+            <div className="container">
               {this.renderListings()}
             </div>    
           );
         } else {
           return(
-            <div>
-              <div id='msg-app-loading'>
-                Loading...
+            <div className="preloader-wrapper active">
+              <div className="spinner-layer spinner-red-only">
+                <div className="circle-clipper left">
+                  <div className="circle"></div>
+                </div>
+                <div className="gap-patch">
+                  <div className="circle"></div>
+                </div>
+                <div className="circle-clipper right">
+                  <div className="circle"></div>
+                </div>
               </div>
             </div>
           );

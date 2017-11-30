@@ -6,4 +6,4 @@ RUN apt-get install -y python python-pip
 ADD . /src
 WORKDIR /src
 RUN pip install -r house_listing_pipeline/requirements.txt
-CMD ["./house_listing_pipeline/house_listing_pipeline_launcher.sh"]
+CMD ["python", "house_listing_pipeline/filter/house_listing_filter_loop.py"]

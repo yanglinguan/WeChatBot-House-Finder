@@ -12,7 +12,7 @@ TOKEN = config['TOKEN']
 AES_KEY = config['AESKEY']
 APPID = config['APPID']
 
-REDIS_HOST = 'localhost'
+REDIS_HOST = 'redis'
 REDIS_PORT = 6379
 
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)

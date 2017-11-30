@@ -7,6 +7,7 @@ var path = require('path');
 var index = require('./routes/index')
 var requestPage = require('./routes/request')
 var historyPage = require('./routes/history')
+var detailPage = require('./routes/detail')
 var app = express()
 
 // view engine setup
@@ -17,10 +18,10 @@ app.use('/static', express.static(path.join(__dirname, '../client/build/static/'
 
 app.use(cors())
 app.use(bodyParser.json())
-app.use('/', index)
+app.use('/requestForm', index)
 app.use('/requestForm', requestPage)
 app.use('/history', historyPage)
-
+app.use('/requestDetail', detailPage)
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;

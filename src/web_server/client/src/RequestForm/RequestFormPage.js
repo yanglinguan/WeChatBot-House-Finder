@@ -1,7 +1,6 @@
 import Auth from '../Auth/Auth'
 import './RequestFormPage.css';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import RequestForm from './RequestForm';
 
@@ -90,7 +89,7 @@ class RequestFormPage extends React.Component {
             errors
           });
         } else {
-          this.context.router.replace('/confirmation');
+          this.context.router.replace('/confirmation/userId/' + this.state.user_id);
         }
       });
   }
@@ -107,16 +106,10 @@ class RequestFormPage extends React.Component {
       errors[field] = event.target.validationMessage;
       this.setState({errors});
       return;
+    } else {
+      errors[field] = "";
+      this.setState({errors});
     }
-
-   // if(field === "areas") {
-     // const areaArray = value.split(",");
-    //  for(var a in areaArray){
-    //    request_form[field].push(a.replace(/ /g, ''));
-    //  }
-   //   this.setState({request_form})
-   //   return
-  //  }
 
     if(field === "private_bath") {
       if(value === "true") {

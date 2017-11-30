@@ -6,7 +6,7 @@ services:
         depends_on:
             - redis
         environment:
-            - REDIS_HOST=localhost
+            - REDIS_HOST=redis
         ports:
             - "5001:5001"
     web:
@@ -20,18 +20,35 @@ services:
         depends_on:
             - redis
         environment:
-            - REDIS_HOST=localhost
+            - REDIS_HOST=redis
         ports:
             - "4040:4040"
-    pipeline:
+    scraper:
         build:
-            context: ./house_listing_pipeline
+            context: .
+            dockerfile: ./house_listing_pipeline/scrape/Dockerfile
+        depends_on:
+            - redis
+        environment:
+            - REDIS_HOST=redis
+    filter:
+        build:
+            context: .
+            dockerfile: ./house_listing_pipeline/filter/Dockerfile
+        depends_on:
+            - redis
+        environment:
+            - REDIS_HOST=redis
+    deduper:
+        build:
+            context: .
+            dockerfile: ./house_listing_pipeline/deduper/Dockerfile
         depends_on:
             - redis
             - mongo
         environment:
-            - REDIS_HOST=localhost
-            - MONGO_DB_HOST=localhost
+            - REDIS_HOST=redis
+            - MONGO_DB_HOST=mongo
     redis:
         image: redis:3.2-alpine
         volumes:

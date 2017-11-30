@@ -8,7 +8,7 @@ import time
 
 from craigslist import CraigslistHousing
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'common'))
 
 from cloudAMQP_client import CloudAMQPClient
 
@@ -16,7 +16,7 @@ SLEEP_TIME_IN_SECONDS = 10
 
 HOUSE_LISTING_TIME_OUT_IN_SECONDS = 3600 * 24 * 3
 
-REDIS_HOST = 'localhost'
+REDIS_HOST = 'redis'
 REDIS_PORT = 6379
 
 FILTER_TASK_QUEUE_URL = "amqp://ymcsvgqv:ulM5Xwupq5lJdQ3L0HBy_-xO74CRtGh7@mosquito.rmq.cloudamqp.com/ymcsvgqv"

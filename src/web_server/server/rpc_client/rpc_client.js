@@ -25,6 +25,15 @@ function getRequestHistory(user_id, callback) {
       
 }
 
+function getRequestDetail(user_id, request_id, callback) {
+  client.request('getRequestDetail', [user_id, request_id], function(err, error, response) {
+    if (err) throw err;
+    console.log(response);
+    callback(response);
+  });
+      
+}
+
 function deleteRequestForm(user_id, request_id, callback) {
   client.request('deleteRequestForm', [user_id, request_id], function(err, error, response) {
     if (err) throw err;
@@ -37,4 +46,5 @@ module.exports = {
   submitRequestForm: submitRequestForm,
   getRequestHistory: getRequestHistory,
   deleteRequestForm: deleteRequestForm,
+  getRequestDetail: getRequestDetail,
 };
