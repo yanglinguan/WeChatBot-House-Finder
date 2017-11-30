@@ -11,7 +11,7 @@ from cloudAMQP_client import CloudAMQPClient
 
 SLEEP_TIME_IN_SECONDS = 10
 
-REDIS_HOST = 'redis'
+REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT)

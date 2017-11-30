@@ -28,7 +28,7 @@ class HistoryPage extends React.Component {
 
  
   loadHistory() {
-    let url = 'http://localhost:3001/history/userId/' + this.state.user_id;
+    let url = 'http://house.yanglinguan.me/history/userId/' + this.state.user_id;
 
     let request = new Request(encodeURI(url), {
       method: 'GET',

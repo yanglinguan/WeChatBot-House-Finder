@@ -14,7 +14,7 @@ class DetailPage extends React.Component {
   }
 
   loadDetail() {
-    let url = 'http://localhost:3001/requestDetail/userId/' + this.state.user_id + "/requestId/" + this.state.request_id;
+    let url = 'http://house.yanglinguan.me/requestDetail/userId/' + this.state.user_id + "/requestId/" + this.state.request_id;
 
     let request = new Request(encodeURI(url), {
       method: 'GET',

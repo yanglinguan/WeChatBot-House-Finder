@@ -7,6 +7,7 @@ import sys
 from bson.json_util import dumps
 from datetime import datetime
 
+#sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379

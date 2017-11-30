@@ -4,3 +4,4 @@ googlemaps
 python-craigslist
 pika
 pymongo
+lxml

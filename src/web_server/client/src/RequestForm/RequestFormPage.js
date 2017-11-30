@@ -44,7 +44,7 @@ class RequestFormPage extends React.Component {
     
     const user_id = this.state.user_id;
 
-    let url = 'http://localhost:3001/requestForm/userId/' + this.state.user_id;
+    let url = 'http://house.yanglinguan.me/requestForm/userId/' + this.state.user_id;
 
     const request_form = this.state.request_form
     const areaArray = request_form.areas.split(",");
