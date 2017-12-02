@@ -11,6 +11,8 @@ class RequestFormPage extends React.Component {
       errors: {},
       message: '',
       user_id: context.router.params.userId,
+      host: props.route.serverHost,
+      port: props.route.serverPort,
       request_form: {
         areas: '',
         city: '',
@@ -36,6 +38,7 @@ class RequestFormPage extends React.Component {
   componentDidMount() {
     console.log("log");
     console.log(this.state.user_id);
+    console.log(this.state.host);
     Auth.authenticateUser(this.state.user_id);
   }
 
@@ -44,7 +47,7 @@ class RequestFormPage extends React.Component {
     
     const user_id = this.state.user_id;
 
-    let url = 'http://house.yanglinguan.me/requestForm/userId/' + this.state.user_id;
+    let url = 'http://' + this.state.host + '/requestForm/userId/' + this.state.user_id;
 
     const request_form = this.state.request_form
     const areaArray = request_form.areas.split(",");
@@ -98,8 +101,6 @@ class RequestFormPage extends React.Component {
     const field = event.target.name;
     const request_form = this.state.request_form;
     const errors = this.state.errors
-    //console.log(field)
-    //console.log(event.target.value);
     const value = event.target.value;
 
     if(!event.target.validity.valid) {
@@ -129,7 +130,6 @@ class RequestFormPage extends React.Component {
       return;
     }
 
-   
     request_form[field] = event.target.value;
 
     this.setState({request_form});

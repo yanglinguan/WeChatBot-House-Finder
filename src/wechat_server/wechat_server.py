@@ -11,8 +11,9 @@ from wechatpy.exceptions import (
 )
 
 import utils
+import json
 
-from config import config
+config = json.load(open("../config/wechat_config.json")) 
 
 TOKEN = config['TOKEN']
 AES_KEY = config['AESKEY']

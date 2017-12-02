@@ -1,5 +1,6 @@
 import datetime
 import hashlib
+import json
 import pickle
 import redis
 import os
@@ -10,17 +11,20 @@ from craigslist import CraigslistHousing
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'common'))
 
+db_config = json.load(open("../../config/db.config.json"))
+queue_config = json.load(open("../../config/rabbitmq.config.json"))
+
 from cloudAMQP_client import CloudAMQPClient
 
 SLEEP_TIME_IN_SECONDS = 10
 
 HOUSE_LISTING_TIME_OUT_IN_SECONDS = 3600 * 24 * 3
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+REDIS_HOST = db_config["REDIS_HOST"]
+REDIS_PORT = db_config["REDIS_PORT"]
 
-FILTER_TASK_QUEUE_URL = "amqp://ymcsvgqv:ulM5Xwupq5lJdQ3L0HBy_-xO74CRtGh7@mosquito.rmq.cloudamqp.com/ymcsvgqv"
-FILTER_TASK_QUEUE_NAME = "filter_task_queue"
+FILTER_TASK_QUEUE_URL = queue_config["FILTER_TASK_QUEUE_URL"]
+FILTER_TASK_QUEUE_NAME = queue_config["FILTER_TASK_QUEUE_NAME"]
 
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT)
 cloudAMQP_client = CloudAMQPClient(FILTER_TASK_QUEUE_URL, FILTER_TASK_QUEUE_NAME)
@@ -123,10 +127,3 @@ def do_scrape():
             print("{}: Got {} results for client {}".format(time.ctime(), len(all_results), client_id))
 
             cloudAMQP_client.sleep(SLEEP_TIME_IN_SECONDS)
-
-
-
-#while True:
- #   do_scrape()
-  #  cloudAMQP_client.sleep(SLEEP_TIME_BETWEEN_LOOP_IN_SECONDS)
-

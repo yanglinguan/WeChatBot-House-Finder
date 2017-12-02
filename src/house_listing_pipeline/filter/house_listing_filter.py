@@ -1,4 +1,5 @@
 import datetime
+import json
 import googlemaps
 import os
 import pickle
@@ -9,24 +10,28 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'common'))
 
 from cloudAMQP_client import CloudAMQPClient
 
+db_config = json.load(open("../../config/db.config.json"))
+queue_config = json.load(open("../../config/rabbitmq.config.json"))
+google_map_api_key = json.load(open("../../config/googleMap.config.json"))
+
 SLEEP_TIME_IN_SECONDS = 10
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+REDIS_HOST = db_config["REDIS_HOST"]
+REDIS_PORT = db_config["REDIS_PORT"]
 
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT)
 
-FILTER_TASK_QUEUE_URL = "amqp://ymcsvgqv:ulM5Xwupq5lJdQ3L0HBy_-xO74CRtGh7@mosquito.rmq.cloudamqp.com/ymcsvgqv"
-FILTER_TASK_QUEUE_NAME = "filter_task_queue"
+FILTER_TASK_QUEUE_URL = queue_config["FILTER_TASK_QUEUE_URL"]
+FILTER_TASK_QUEUE_NAME = queue_config["FILTER_TASK_QUEUE_NAME"]
 
-DEDUP_TASK_QUEUE_URL = "amqp://qmkhhszp:tgEYKeeNuKfnKRiWLX6p9-Kuv8Zfl066@elephant.rmq.cloudamqp.com/qmkhhszp"
-DEDUP_TASK_QUEUE_NAME = "dedup_task_queue"
+DEDUP_TASK_QUEUE_URL = queue_config["DEDUP_TASK_QUEUE_URL"]
+DEDUP_TASK_QUEUE_NAME = queue_config["DEDUP_TASK_QUEUE_NAME"]
 
 
 filter_queue_client = CloudAMQPClient(FILTER_TASK_QUEUE_URL, FILTER_TASK_QUEUE_NAME) 
 dedup_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)
 
-gmaps = googlemaps.Client(key='AIzaSyAf4ltA-FUcRxs52hR_EVqJbYFL7amwZJI')
+gmaps = googlemaps.Client(key=google_map_api_key["GOOGLE_MAP_API_KEY"])
 
 WALKING_MODE = "WALKING"
 DRIVING_MODE = "driving"

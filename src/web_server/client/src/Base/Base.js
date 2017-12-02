@@ -11,6 +11,7 @@ const Base = ({ children }) => (
         <a href="/" className="brand-logo">House Finder</a>
         <ul id="nav-mobile" className="right">
           <div>
+            <li><Link to={"/home/userId/" + Auth.getUserId()}>Home</Link></li>
             <li><Link to={"/history/userId/" + Auth.getUserId()}>History</Link></li>
           </div>
         </ul>

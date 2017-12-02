@@ -1,0 +1,6 @@
+{
+    "REDIS_HOST": "",
+    "REDIS_PORT": "",
+    "MONGO_HOST": "",
+    "MONGO_PORT": ""
+}

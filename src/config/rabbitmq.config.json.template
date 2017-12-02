@@ -1,0 +1,6 @@
+{
+    "FILTER_TASK_QUEUE_URL": "",
+    "FILTER_TASK_QUEUE_NAME": "",
+    "DEDUPER_TASK_QUEUE_URL": "",
+    "DEDUPER_TASK_QUEUE_NAME": ""
+}

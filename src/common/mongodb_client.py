@@ -1,7 +1,10 @@
 from pymongo import MongoClient
+import json
 
-MONGO_DB_HOST = 'localhost'
-MONGO_DB_PORT = '27017'
+config = json.load(open('../config/db.config.json'))
+
+MONGO_DB_HOST = config["MONGO_HOST"]
+MONGO_DB_PORT = config["MONGO_PORT"]
 DB_NAME = 'house-finder'
 
 client = MongoClient("%s:%s" % (MONGO_DB_HOST, MONGO_DB_PORT))

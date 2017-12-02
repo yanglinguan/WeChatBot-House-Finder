@@ -18,10 +18,13 @@ from cloudAMQP_client import CloudAMQPClient
 
 HOUSE_LISTING_TABLE_NAME = "house-listings"
 
+db_config = json.load(open("../../config/db.config.json"))
+queue_config = json.load(open("../../config/rabbitmq.config.json"))
+
 SLEEP_TIME_IN_SECONDS = 1
 
-DEDUP_TASK_QUEUE_URL = "amqp://qmkhhszp:tgEYKeeNuKfnKRiWLX6p9-Kuv8Zfl066@elephant.rmq.cloudamqp.com/qmkhhszp"
-DEDUP_TASK_QUEUE_NAME = "dedup_task_queue"
+DEDUP_TASK_QUEUE_URL = queue_config["DEDUP_TASK_QUEUE_URL"]
+DEDUP_TASK_QUEUE_NAME = queue_config["DEDUP_TASK_QUEUE_NAME"]
 
 NOTIFICATION_TASK_QUEUE_URL = "amqp://lmmocuap:DPdNdw03IT0laCvkNm66BzP_0iSY3GHk@elephant.rmq.cloudamqp.com/lmmocuap"
 NOTIFICATION_TASK_QUEUE_NAME = "notification_task_queue"
@@ -29,8 +32,9 @@ NOTIFICATION_TASK_QUEUE_NAME = "notification_task_queue"
 dedup_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)
 notification_queue_client = CloudAMQPClient(DEDUP_TASK_QUEUE_URL, DEDUP_TASK_QUEUE_NAME)  
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+REDIS_HOST = db_config["REDIS_HOST"]
+REDIS_PORT = db_config["REDIS_PORT"]
+
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
 
 def send_to_redis(task):

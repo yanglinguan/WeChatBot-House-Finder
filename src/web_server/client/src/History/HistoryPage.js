@@ -8,27 +8,21 @@ class HistoryPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      host: props.route.serverHost,
       user_id: context.router.params.userId,
       listings: null
     };
   }
 
   componentDidMount() {
-    //let x = $('.collapsible');
-   // x.collapsible;
-    //    this.collapsible.collapsible();
     this.loadHistory();
-    //$(document).ready(function(){
-   // $('.collapsible').collapsible();
-   // });
-  
   }
 
 
 
  
   loadHistory() {
-    let url = 'http://house.yanglinguan.me/history/userId/' + this.state.user_id;
+    let url = 'http://' + this.state.host + '/history/userId/' + this.state.user_id;
 
     let request = new Request(encodeURI(url), {
       method: 'GET',
@@ -88,7 +82,6 @@ class HistoryPage extends React.Component {
             </div>
           );
         }
-  
   }
 }
 

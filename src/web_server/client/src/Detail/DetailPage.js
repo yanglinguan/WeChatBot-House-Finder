@@ -5,7 +5,8 @@ class DetailPage extends React.Component {
     super(props, context);
     this.state = {
       user_id: context.router.params.userId,
-      request_id: context.router.params.requestId
+      request_id: context.router.params.requestId,
+      host: props.route.serverHost
     };
   }
 
@@ -14,7 +15,8 @@ class DetailPage extends React.Component {
   }
 
   loadDetail() {
-    let url = 'http://house.yanglinguan.me/requestDetail/userId/' + this.state.user_id + "/requestId/" + this.state.request_id;
+    let url = 'http://' + this.state.host + '/requestDetail/userId/' 
+      + this.state.user_id + "/requestId/" + this.state.request_id;
 
     let request = new Request(encodeURI(url), {
       method: 'GET',
@@ -50,7 +52,6 @@ class DetailPage extends React.Component {
 
   editRequest() {}
 
-
   render() {
     if(this.state.listing) {
       return (
@@ -82,11 +83,8 @@ class DetailPage extends React.Component {
               </div>
             </div>
           );
-
     }
   }
-
-
 }
 
 DetailPage.contextTypes = {
