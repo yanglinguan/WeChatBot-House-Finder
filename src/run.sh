@@ -1,11 +1,11 @@
 
 ## start webserver
-cd $HOME/gitsrc/WeChatBot-House-Finder/src/web_server/client
-npm install
-npm run build
-cd $HOME/gitsrc/WeChatBot-House-Finder/src/web_server/server
-npm install
-npm start &
+#cd $HOME/gitsrc/WeChatBot-House-Finder/src/web_server/client
+#npm install
+#npm run build
+#cd $HOME/gitsrc/WeChatBot-House-Finder/src/web_server/server
+#npm install
+#npm start &
 
 ## start backendserver
 cd $HOME/gitsrc/WeChatBot-House-Finder/src/backend_server

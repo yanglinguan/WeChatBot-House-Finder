@@ -1,19 +1,23 @@
 from wechatpy.utils import check_signature
 from wechatpy import create_reply
-from config import config
 from wechatpy.exceptions import (
         InvalidSignatureException, 
         InvalidAppIdException,
 )
 import pickle
 import redis
+import os
+import json
 
-TOKEN = config['TOKEN']
-AES_KEY = config['AESKEY']
-APPID = config['APPID']
+wechat_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/wechat.config.json")))
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+TOKEN = wechat_config['TOKEN']
+AES_KEY = wechat_config['AESKEY']
+APPID = wechat_config['APPID']
+
+db_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/db.config.json")))
+REDIS_HOST = db_config["REDIS_HOST"]
+REDIS_PORT = db_config["REDIS_PORT"]
 
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
 
@@ -24,10 +28,7 @@ def check_signature(request):
     nonce = request.args.get('nonce', '')
     encrypt_type = request.args.get('encrypt_type', 'raw')
     msg_signature = request.args.get('msg_signature', '')
-    #try:
-     #   check_signature(TOKEN, signature, timestamp, nonce)
-   # except InvalidSignatureException:
-    #    abort(403)
+    check_signature(TOKEN, signature, timestamp, nonce)
 
 def event_handler(msg):
     if msg.event == 'subscribe':

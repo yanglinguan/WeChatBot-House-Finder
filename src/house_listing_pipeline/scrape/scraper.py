@@ -11,9 +11,8 @@ from craigslist import CraigslistHousing
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'common'))
 
-db_config = json.load(open("../../config/db.config.json"))
-queue_config = json.load(open("../../config/rabbitmq.config.json"))
-
+db_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/db.config.json")))
+queue_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/rabbitmq.config.json")))
 from cloudAMQP_client import CloudAMQPClient
 
 SLEEP_TIME_IN_SECONDS = 10

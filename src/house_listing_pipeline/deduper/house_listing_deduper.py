@@ -18,8 +18,8 @@ from cloudAMQP_client import CloudAMQPClient
 
 HOUSE_LISTING_TABLE_NAME = "house-listings"
 
-db_config = json.load(open("../../config/db.config.json"))
-queue_config = json.load(open("../../config/rabbitmq.config.json"))
+db_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/db.config.json")))
+queue_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/rabbitmq.config.json")))
 
 SLEEP_TIME_IN_SECONDS = 1
 

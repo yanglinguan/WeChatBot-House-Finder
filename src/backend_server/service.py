@@ -1,8 +1,8 @@
 import json
 import operations
 import pyjsonrpc
-
-config = json.load(open("../config/backend_server.config.json"))
+import os
+config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/backend_server.config.json")))
 
 SERVER_HOST = config["HOST"]
 SERVER_PORT = config["PORT"]

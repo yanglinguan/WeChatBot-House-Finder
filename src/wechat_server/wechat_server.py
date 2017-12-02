@@ -13,13 +13,6 @@ from wechatpy.exceptions import (
 import utils
 import json
 
-config = json.load(open("../config/wechat_config.json")) 
-
-TOKEN = config['TOKEN']
-AES_KEY = config['AESKEY']
-APPID = config['APPID']
-
-
 app = Flask(__name__)
 
 def check_wrap(request):
