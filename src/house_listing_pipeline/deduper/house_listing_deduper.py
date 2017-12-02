@@ -95,6 +95,15 @@ def handle_message(msg):
 
     db[HOUSE_LISTING_TABLE_NAME].replace_one({'img_id_hash': task['img_id_hash']}, task, upsert=True)
     print "********************************************* before send to redis"
+
+    gallery = soup.find("div", {"class": "gallery"})
+    img_url = ""
+    if gallery:
+        img = gallery.find("img")
+        if img and img.attrs.get("src"):
+            img_url = img.attrs.get("src").strip()
+    task["img_url"] = img_url
+    print img_url
     send_to_redis(task)
     
     #notification_queue_client.sendMessage(task)

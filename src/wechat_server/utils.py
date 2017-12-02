@@ -57,6 +57,7 @@ def text_handler(msg):
             a = {
                 'title': h["name"],
                 'description': h["location"],
+                'image': h["img_url"],
                 'url': h["url"],
                 }
             articles.append(a)
