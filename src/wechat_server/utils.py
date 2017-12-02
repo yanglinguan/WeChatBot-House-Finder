@@ -1,4 +1,4 @@
-from wechatpy.utils import check_signature
+import wechatpy.utils
 from wechatpy import create_reply
 from wechatpy.exceptions import (
         InvalidSignatureException, 
@@ -28,7 +28,7 @@ def check_signature(request):
     nonce = request.args.get('nonce', '')
     encrypt_type = request.args.get('encrypt_type', 'raw')
     msg_signature = request.args.get('msg_signature', '')
-    check_signature(TOKEN, signature, timestamp, nonce)
+    wechatpy.utils.check_signature(TOKEN, signature, timestamp, nonce)
 
 def event_handler(msg):
     if msg.event == 'subscribe':
