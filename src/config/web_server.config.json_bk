@@ -1,5 +1,5 @@
 {
-    "HOST":"localhost",
+    "HOST":"localhos",
     "PORT": 3001,
     "CLIENT_HOST": "house.yanglinguan.me"
 }
