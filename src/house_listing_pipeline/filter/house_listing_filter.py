@@ -9,9 +9,13 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..', 'common'))
 
 from cloudAMQP_client import CloudAMQPClient
-db_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/db.config.json")))
-queue_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/rabbitmq.config.json")))
-google_map_api_key = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/googleMap.config.json")))
+config_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "config", "config.json")
+with open(config_path) as config_file:
+    json_config = json.load(config_file)
+
+db_config = json_config["db"]
+queue_config = json_config["rabbit_mq"]
+google_map_api_key = json_config["google_map"]
 
 SLEEP_TIME_IN_SECONDS = 10
 

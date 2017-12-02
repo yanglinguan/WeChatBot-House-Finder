@@ -13,6 +13,15 @@ from wechatpy.exceptions import (
 import utils
 import json
 
+config_path = os.path.join(os.path.dirname(__file__), "..", "..", "config", "config.json")
+with open(config_path) as config_file:
+    json_config = json.load(config_file)
+
+config = json_config["wechat_server"]
+
+HOST = config["HOST"]
+PORT = config["PORT"]
+
 app = Flask(__name__)
 
 def check_wrap(request):
@@ -45,5 +54,5 @@ def wechat_post():
     return reply.render()
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 5001, debug=True)
+    app.run(HOST, PORT, debug=True)
 

@@ -1,7 +1,12 @@
 from pymongo import MongoClient
 import json
 import os
-config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/db.config.json")))
+
+config_path = os.path.join(os.path.dirname(__file__), "..", "..", "config", "config.json")
+with open(config_path) as config_file:
+    json_config = json.load(config_file)
+
+config = json_config["db"]
 
 MONGO_DB_HOST = config["MONGO_HOST"]
 MONGO_DB_PORT = config["MONGO_PORT"]

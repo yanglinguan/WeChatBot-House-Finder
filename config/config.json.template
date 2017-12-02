@@ -1,0 +1,32 @@
+{
+    "web_server": {
+        "HOST":"localhost",
+        "PORT":3000,
+        "CLIENT_HOST": ""
+    },
+    "backend_server": {
+        "HOST": "localhost",
+        "PORT": 4040
+    },
+    "wechat_server": {
+        "APPID": "",
+        "TOKEN": "",
+        "AESKEY": "",
+        "SECRET": ""
+    },
+    "rabbit_mq": {
+        "FILTER_TASK_QUEUE_URL": "",
+        "FILTER_TASK_QUEUE_NAME": "",
+        "DEDUP_TASK_QUEUE_URL": "",
+        "DEDUP_TASK_QUEUE_NAME": ""
+    },
+    "db": {
+        "REDIS_HOST": "",
+        "REDIS_PORT": "",
+        "MONGO_HOST": "",
+        "MONGO_PORT": ""
+    },
+    "google_map": {
+        "GOOGLE_MAP_API_KEY": ""
+    }
+}

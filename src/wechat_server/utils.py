@@ -9,13 +9,17 @@ import redis
 import os
 import json
 
-wechat_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/wechat.config.json")))
+config_path = os.path.join(os.path.dirname(__file__), "..", "..", "config", "config.json")
+with open(config_path) as config_file:
+    json_config = json.load(config_file)
+
+wechat_config = json_config["wechat_server"]
+db_config = json_config["db"]
 
 TOKEN = wechat_config['TOKEN']
 AES_KEY = wechat_config['AESKEY']
 APPID = wechat_config['APPID']
 
-db_config = json.load(open(os.path.join(os.environ["HOUSE_FINDER_HOME"], "config/db.config.json")))
 REDIS_HOST = db_config["REDIS_HOST"]
 REDIS_PORT = db_config["REDIS_PORT"]
 
