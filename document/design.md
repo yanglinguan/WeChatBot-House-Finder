@@ -46,7 +46,7 @@ The back-end server handle RPC from the web server. Based on the clients' reques
 
 The diagram of the data flow is shown below.
 
-![house listing pipeline](dataPipeLine.png)
+![dataPipeLine](dataPipeLine.png)
 * Implementation Details
   * Data Structures
     *   *Client Request*. The details of the Client Request is in Table 1.
