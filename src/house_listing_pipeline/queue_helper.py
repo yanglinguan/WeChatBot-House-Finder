@@ -4,12 +4,17 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 from cloudAMQP_client import CloudAMQPClient
+config_path = os.path.join(os.path.dirname(__file__), "..", "..", "config", "config.json")
+with open(config_path) as config_file:
+    json_config = json.load(config_file)
 
-FILTER_TASK_QUEUE_URL = "amqp://ymcsvgqv:ulM5Xwupq5lJdQ3L0HBy_-xO74CRtGh7@mosquito.rmq.cloudamqp.com/ymcsvgqv"
-FILTER_TASK_QUEUE_NAME = "filter_task_queue"
+queue_config = json_config["rabbit_mq"]
+FILTER_TASK_QUEUE_URL = queue_config["FILTER_TASK_QUEUE_URL"]
+FILTER_TASK_QUEUE_NAME = queue_config["FILTER_TASK_QUEUE_NAME"]
 
-DEDUP_TASK_QUEUE_URL = "amqp://qmkhhszp:tgEYKeeNuKfnKRiWLX6p9-Kuv8Zfl066@elephant.rmq.cloudamqp.com/qmkhhszp"
-DEDUP_TASK_QUEUE_NAME = "dedup_task_queue"
+DEDUP_TASK_QUEUE_URL = queue_config["DEDUP_TASK_QUEUE_URL"]
+DEDUP_TASK_QUEUE_NAME = queue_config["DEDUP_TASK_QUEUE_NAME"]
+
 
 def clearQueue(queue_url, queue_name):
     
