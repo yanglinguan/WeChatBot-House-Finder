@@ -1,6 +1,41 @@
 # Design Document
+## Overview
+WeChatBot-House-Finder is a system that helps clients to find a rent house quicker and easier. This document describes the design of the system in detail.
+## Main Use Cases
+* Users follow our WeChat offical account.
+* We sends a link of submitting request to users.
+* Users can submit their request through the link.
+* Users can send "new" to our WeChat offical account to get new house listings.
+
+## High Level Design Diagram
+The system consists four parts:
+* Front-end web server which includes web client and web server.
+* Back-end server
+* Data pipeline which includes scraper, filter, and deduper.
+* WeChat server.
+
+![high level design](highLevelDesign.png)
+
 ## Detail Design
-### House Listings Pipeline
+### Front-end Web Server
+The front-end web server consists web client and web server. The web client communicates with the web server by sending `RESTful` requests. We use `React` to build the web client, and `Node.js` and `Express` to build the web server. We use [`Goolge Materialize`](http://materializecss.com/) to design the UI.
+
+The Web Client consists following components:
+* RequestFormPage: this page shows a request form to clients. Clients can fill the form and submit to the server.
+* HistoryPage: this page shows a list of request histories that clients sent to server.
+* DetailPage: for each history request, there is detial page to show all the details of the request.
+* HomePage: clients can access the RequestFormPage and HistoryPage through HomePage.
+* NavigationBar: NavigationBar consists application name and two buttons: home and history. Clients can go to the HomePage and HistoryPage by click these two buttons.
+
+The RESTful API is shown below.
+![api](api.png)
+
+The web server is an `Express` server. Once the web server receives requests from client, it forwards the requests to the back-end server through RPC. We use `python-jsonrpc`.
+
+### Back-end Server
+The back-end server handle RPC from the web server. Based on the clients' requests, it fetchs the cooresponding data from database. In addition, the back-end server also store the client request into Redis so that the data pipeline can scrape the data based the requests.
+
+### Data Pipeline
 *  Data Flow
   1.  Once `Client Request Service` gets a request from a client, it first checks if database has matched house listing. If there is a listing found, then it sends notification to the client.
   1.  Then store the request into `Redis`.
@@ -11,7 +46,7 @@
 
 The diagram of the data flow is shown below.
 
-![house listing pipeline](houseListingPipeLine.png)
+![house listing pipeline](dataPipeLine.png)
 * Implementation Details
   * Data Structures
     *   *Client Request*. The details of the Client Request is in Table 1.
@@ -70,3 +105,20 @@ location|string, location
 post_date|date, listing post date
 price|float, price of the house
 url|string, url to the listing
+
+### WeChat Server
+When the clients send a message to our WeChat offical account, the message is forwarded to WeChat Server. We use `Flask` to build WeChat Server.
+
+When the clients follow the WeChat office account, server sends a link that consists the request form to clients. Then, clients can be directed to the front-end server.
+
+When the clients send "new" text message to sever, the server fetchs new listings from Redis.
+
+## Deployment
+This system is deployed on [Vultr](https://www.vultr.com/?123759383) cloud using Nginx and Docker.
+
+## Future work
+* Avoid scrape redundant data
+* Use distributed system to scale the system
+* Use MongoDB replication groups to replicate data to provide fault tolerance
+* Use another application, such as Slack, WhatsApp, instead of WeChat to achieve notification services
+* Use machine learning to predict rental
